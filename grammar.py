@@ -15,12 +15,32 @@ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more de
 
 """
 
-from grammar import *
+from bnf_tree import *
 
-def main():
+def read_grammar(filename):
 
-	read_grammar('grammar.bnf')
+	"""
+    Read grammar based in a bnf file
+    """
 
-if __name__ == "__main__":
+	rules = {}
+	first = ""
 
-	main()
+	with open(filename,'r') as f_in:
+
+		lines = filter(None, (line.rstrip() for line in f_in))
+		first = lines[0].split('->')[0].strip()
+		for line in lines:
+			parent,childs = line.strip().split('->')
+			parent = parent.strip()
+			groups = childs.split('|')
+
+			rules[parent]=[]
+			for group in groups:
+				rules[parent].append(group.split())
+
+	return rules,first
+
+def create_Tree(rules):
+
+	tree = BNFTree()

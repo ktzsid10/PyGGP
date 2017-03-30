@@ -57,7 +57,7 @@ class BNFTree:
             temp._addChild(child)
             self.nodes[data]=child
         else:
-            raise ValueError('BNF is not well defined, child '+data+' appears before '+parent+' definition')
+            raise ValueError('BNF is not well defined, child '+data+' appears before '+parent+' definition') 
 
     def searchNode(self,node):
 
@@ -75,17 +75,3 @@ class BNFTree:
         for key,values in self.nodes.items():
             print key +" "+str(values.optional)
             print values.childs
-
-def create_Tree(filename):
-
-    tree = BNFTree()
-
-    with open(filename,'r') as inp:
-        for line in inp:
-            parent,childs = line.strip().split('->')
-            childs = childs.split()
-            parent = parent.strip()
-            for child in childs:
-                tree.insertNode(parent,child)
-
-    print(tree.printNodes())
