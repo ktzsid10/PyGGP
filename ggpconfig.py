@@ -17,5 +17,8 @@ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more de
 
 class GGPconfig:
 
-	def __init__(self,pop):
+	def __init__(self,pop=100,gen=100,mr=90,cr=90):
 		self.population_size = pop
+		self.generations = gen
+		self.mutation_rate = mr
+		self.crossover_rate = cr

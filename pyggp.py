@@ -18,18 +18,18 @@ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more de
 from grammar import *
 from bnf_tree import *
 from ggpconfig import *
-from ggpdata import *
+from ggp import *
 
 
 def main():
 
-	config = GGPconfig(10)
+	config = GGPconfig(pop=5)
 	rules,start = read_grammar('grammar.bnf')
 
-	data = GGPdata(rules,start,config)
-	data._printPopulation()
+	data = GGP(rules,start,config)
 	data._generatePopulation()
 	data._printPopulation()
+	data._crossover(data.population[0],data.population[1])
 
 if __name__ == "__main__":
 
