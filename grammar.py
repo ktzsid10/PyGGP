@@ -15,6 +15,8 @@ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more de
 
 """
 
+from collections import deque
+
 def read_grammar(filename):
 
 	"""
@@ -38,3 +40,34 @@ def read_grammar(filename):
 				rules[parent].append(group.split())
 
 	return rules,first
+
+def analise_probabilities(rules, start):
+
+	to_calc = deque()
+	to_calc.append(start)
+	probabilites = {}
+
+	probabilites[start]=100
+
+	while to_calc:
+		parent = to_calc.popleft()
+		if(parent in rules):
+			childs = rules[parent]
+		else:
+			continue
+
+		if(len(childs)>1):
+			proba = probabilites[parent]/len(childs)
+		else:
+			proba = probabilites[parent]
+
+		for child in childs:
+			for grandson in child:
+				if(grandson.startswith('[')):
+					grandson = grandson.replace('[','').replace(']','')
+					probabilites[grandson]=proba/2
+				else:
+					probabilites[grandson]=proba
+				to_calc.append(grandson)
+
+	print probabilites

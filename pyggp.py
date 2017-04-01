@@ -25,11 +25,12 @@ def main():
 
 	config = GGPconfig(pop=5)
 	rules,start = read_grammar('grammar.bnf')
+	analise_probabilities(rules,start)
 
 	data = GGP(rules,start,config)
 	data._generatePopulation()
 	data._printPopulation()
-	data._crossover(data.population[0],data.population[1])
+	#data._crossover(data.population[0],data.population[1])
 
 if __name__ == "__main__":
 
