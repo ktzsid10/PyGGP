@@ -14,13 +14,27 @@ PyGGP is distributed in the hope that it will be useful, but WITHOUT ANY WARRANT
 FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. See http://www.gnu.org/licenses/.
 
 """
+from bnf_tree import *
 
-from grammar import *
+class GGPdata:
 
-def main():
+	def __init__(self,rules,start,config):
+		self.rules=rules
+		self.start=start
+		self.config=config
+		self.population=[]
 
-	read_grammar('grammar.bnf')
+	def _printPopulation(self):
+		count = 0
+		for ind in self.population:
+			print "Ind "+str(count)+": "+ind._getExpression()
+			count+=1
 
-if __name__ == "__main__":
+	def _generatePopulation(self):
 
-	main()
+		if(len(self.population)>0):
+			self.population.clear()
+
+		for i in range(0,self.config.population_size):
+			tree=create_Tree(self.rules,self.start)
+			self.population.append(tree)

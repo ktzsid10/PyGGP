@@ -15,26 +15,24 @@ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more de
 
 """
 
-def read_grammar(filename):
+from grammar import *
+from bnf_tree import *
+from ggpconfig import *
+from ggpdata import *
 
-	"""
-    Read grammar based in a bnf file
-    """
 
-	rules = {}
-	first = ""
+def main():
 
-	with open(filename,'r') as f_in:
+	config = GGPconfig(10)
+	rules,start = read_grammar('grammar.bnf')
 
-		lines = filter(None, (line.rstrip() for line in f_in))
-		first = lines[0].split('->')[0].strip()
-		for line in lines:
-			parent,childs = line.strip().split('->')
-			parent = parent.strip()
-			groups = childs.split('|')
+	data = GGPdata(rules,start,config)
+	data._printPopulation()
+	data._generatePopulation()
+	data._printPopulation()
 
-			rules[parent]=[]
-			for group in groups:
-				rules[parent].append(group.split())
+if __name__ == "__main__":
 
-	return rules,first
+	main()
+
+

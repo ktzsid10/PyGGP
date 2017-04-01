@@ -15,20 +15,19 @@ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more de
 
 """
 
+from collections import deque
+from random import randint
+
 class Node:
     """
     Class Node
     """
-    def __init__(self,value,option=False):
+    def __init__(self,value):
         self.data=value
         self.childs = []
-        self.optional = option
 
     def _addChild(self,child):
         self.childs.append(child)
-
-    def _setOptional(self,optional):
-        self.optional = optional
 
 class BNFTree:
     """
@@ -37,8 +36,9 @@ class BNFTree:
     def __init__(self,root='<start>'):
         self.nodes={}
         self.nodes[root]=Node(root)
+        self.root = root
 
-    def insertNode(self,parent,data):
+    def _insertNode(self,parent,data):
 
         """
         Insert function will insert a node into tree.
@@ -46,20 +46,15 @@ class BNFTree:
         """
         if(parent in self.nodes):
 
-            optional = False
-            if(data.startswith('[')):
-                optional = True
-                data = data.replace('[','').replace(']','')
-
             temp = self.nodes[parent]
-            child = Node(data,option=optional)
+            child = Node(data)
 
             temp._addChild(child)
             self.nodes[data]=child
         else:
             raise ValueError('BNF is not well defined, child '+data+' appears before '+parent+' definition') 
 
-    def searchNode(self,node):
+    def _searchNode(self,node):
 
         """
         Function that returns the reference to the node
@@ -70,8 +65,71 @@ class BNFTree:
         else:
             return None
     
-    def printNodes(self):
+    def _printNodes(self):
 
         for key,values in self.nodes.items():
             print key +" "+str(values.optional)
             print values.childs
+
+
+
+    def _walk_tree(self,node,result):
+
+        if(len(node.childs)==0 or node.childs==None):
+            result.append(node.data)
+        else:
+            for child in node.childs:
+                self._walk_tree(child,result)
+
+    def _getExpression(self):
+        
+        result = []
+        root_node = self.nodes[self.root]
+        self._walk_tree(root_node,result)
+        return ' '.join(result)
+
+def roulette(childs):
+
+    size = 100/len(childs)
+    index = 0
+    roulette = []
+
+    for child in childs:
+        temp = [index]*size
+        index+=1
+        roulette+=temp
+
+    return roulette[randint(0,len(roulette)-1)]
+
+def create_Tree(rules,start):
+
+    tree = BNFTree(root=start)
+
+    to_add = deque()
+    to_add.append(start)
+
+    while to_add:
+        parent = to_add.popleft()
+        if(parent in rules):
+            childs = rules[parent]
+        else:
+            continue
+
+        if(len(childs)>1):
+            index = roulette(childs)
+            childs = childs[index]
+        else:
+            childs=childs[0]
+
+        for child in childs:
+
+            if(child.startswith('[')):
+                index = randint(0,100)
+                if(index<50):
+                    continue
+                child = child.replace('[','').replace(']','')
+
+            tree._insertNode(parent,child)
+            to_add.append(child)
+    
+    return tree
