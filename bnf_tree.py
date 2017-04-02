@@ -68,9 +68,20 @@ class BNFTree:
     def _printNodes(self):
 
         for key,values in self.nodes.items():
-            print key +" "+str(values.optional)
+            print key+" "+str(values)
             print values.childs
 
+    def _updateNodes(self):
+
+        root = self.nodes[self.root]
+        self.nodes.clear()
+        self._updateNode(root)
+
+    def _updateNode(self,node):
+
+        self.nodes[node.data]=node
+        for child in node.childs:
+            self._updateNode(child)
 
 
     def _walk_tree(self,node,result):
@@ -132,4 +143,39 @@ def create_Tree(rules,start):
             tree._insertNode(parent,child)
             to_add.append(child)
     
+    return tree
+
+def mutateTree(rules,node,tree):
+
+    tree.nodes[node.data].childs = []
+
+    to_add = deque()
+    to_add.append(node.data)
+
+    while to_add:
+
+        parent = to_add.popleft()
+        if(parent in rules):
+            childs = rules[parent]
+        else:
+            continue
+
+        if(len(childs)>1):
+            index = roulette(childs)
+            childs = childs[index]
+        else:
+            childs=childs[0]
+
+        for child in childs:
+
+            if(child.startswith('[')):
+                index = randint(0,100)
+                if(index<50):
+                    continue
+                child = child.replace('[','').replace(']','')
+
+            tree._insertNode(parent,child)
+            to_add.append(child)
+
+    tree._updateNodes()
     return tree

@@ -41,7 +41,7 @@ def read_grammar(filename):
 
 	return rules,first
 
-def analise_probabilities(rules, start):
+def probabilities(rules, start):
 
 	to_calc = deque()
 	to_calc.append(start)
@@ -66,7 +66,7 @@ def analise_probabilities(rules, start):
 				if(grandson.startswith('[')):
 					grandson = grandson.replace('[','').replace(']','')
 					probabilites[grandson]=proba/2
-				else:
+				else:	
 					probabilites[grandson]=proba
 				to_calc.append(grandson)
 

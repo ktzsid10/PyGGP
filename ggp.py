@@ -42,19 +42,20 @@ class GGP:
 	def _crossover(self,ind1,ind2):
 
 		#Calculate the nodes intersection between the individuals
-		print ind1._getExpression()
-		print ind2._getExpression()
 		apply_cross = randint(0,100)
 		if(apply_cross<self.config.crossover_rate):
 			intersection = list(ind1.nodes.viewkeys() & ind2.nodes.viewkeys())
 			node_apply = intersection[randint(0,len(intersection)-1)]
-			print ind1.nodes[node_apply]
-			print ind2.nodes[node_apply]
 
 			ind1.nodes[node_apply],ind2.nodes[node_apply] = ind2.nodes[node_apply],ind1.nodes[node_apply]
+			ind1._updateNodes()
+			ind2._updateNodes()
 
-			print ind1.nodes[node_apply]
-			print ind2.nodes[node_apply]
+	def _mutation(self,ind):
+
+		apply_mutation = randint(0,100)
+		if(apply_mutation<self.config.mutation_rate):
+			nodes = list(ind.nodes.viewkeys())
+			node_apply = nodes[randint(0,len(nodes)-1)]
 			
-			print ind1._getExpression()
-			print ind2._getExpression()
+			mutateTree(self.rules,ind.nodes[node_apply],ind)
