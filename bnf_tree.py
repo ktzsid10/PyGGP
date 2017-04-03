@@ -25,9 +25,21 @@ class Node:
     def __init__(self,value):
         self.data=value
         self.childs = []
+        self.parent = None
 
     def _addChild(self,child):
+        child.parent=self
         self.childs.append(child)
+
+    def _replaceChild(self,child,child2):
+        ind = self.childs.index(child)
+        self.childs[ind]=child2
+
+    def _getChildsValue(self):
+        childsV = []
+        for child in self.childs:
+            childsV.append(child.data)
+        return childsV
 
 class BNFTree:
     """
@@ -121,6 +133,7 @@ def create_Tree(rules,start):
 
     while to_add:
         parent = to_add.popleft()
+
         if(parent in rules):
             childs = rules[parent]
         else:

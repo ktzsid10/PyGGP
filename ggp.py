@@ -23,6 +23,7 @@ class GGP:
 		self.start=start
 		self.config=config
 		self.population=[]
+		self.fitness={}
 
 	def _printPopulation(self):
 		count = 0
@@ -45,11 +46,52 @@ class GGP:
 		apply_cross = randint(0,100)
 		if(apply_cross<self.config.crossover_rate):
 			intersection = list(ind1.nodes.viewkeys() & ind2.nodes.viewkeys())
-			node_apply = intersection[randint(0,len(intersection)-1)]
+			node_apply = intersection[randint(0,len(intersection)-1)]		
 
-			ind1.nodes[node_apply],ind2.nodes[node_apply] = ind2.nodes[node_apply],ind1.nodes[node_apply]
-			ind1._updateNodes()
-			ind2._updateNodes()
+			if node_apply == self.start:
+				ind1.nodes[node_apply],ind2.nodes[node_apply] = ind2.nodes[node_apply],ind1.nodes[node_apply]
+			else:
+				parent1 = ind1.nodes[node_apply].parent
+				parent2 = ind2.nodes[node_apply].parent
+
+				child1 = ind1.nodes[node_apply]
+				child2 = ind2.nodes[node_apply]
+
+				parent1._replaceChild(child1,child2)
+				parent2._replaceChild(child2,child1)
+
+				#ind1.nodes[node_apply],ind2.nodes[node_apply] = ind2.nodes[node_apply],ind1.nodes[node_apply]
+				ind1._updateNodes()
+				ind2._updateNodes()
+
+
+	def _printFitness(self):
+
+		for key,value in self.fitness.items():
+
+			print key+" "+str(value)
+
+	def _calculatePopFitness(self,fitness_function):
+		for ind in self.population:
+			if(ind._getExpression() not in self.fitness):
+				fit = fitness_function(ind._getExpression())
+				self.fitness[ind._getExpression()]=fit		
+
+	def _getFitness(self,ind):
+		return self.fitness[ind._getExpression()]
+
+	def _applySelection(self,selection_function,sf_args):
+		self.population = selection_function(self,sf_args)
+
+	def _applyCrossover(self):
+		for i in xrange(0,len(self.population),2):
+			self._crossover(self.population[i],self.population[i+1])
+
+	def _getFitnessIndex(self,index):
+		return self.fitness[self.population[index]._getExpression()]
+
+	def _setFitness(self,ind,value):
+		self.fitness[ind._getExpression()]=value
 
 	def _mutation(self,ind):
 

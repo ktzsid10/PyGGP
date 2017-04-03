@@ -4,4 +4,6 @@ Uma alternativa é andar pela árvore até o nó de início da mutação e copia
 
 Outra alternativa é realizar a modificação e criar uma função que ande a árvore toda criando um novo dicionário de nós. É a mais fácil de se implementar porém se a árvore tiver muitos nós o gasto computacional da mutação vai se tornar muito grande.
 
+Pensar em alguma maneira de se poder utilizar elementos repetidos nos nós que não são terminais. Talvez nos nós terminais ocorra um problema também
+
 
