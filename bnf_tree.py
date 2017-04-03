@@ -34,6 +34,7 @@ class Node:
     def _replaceChild(self,child,child2):
         ind = self.childs.index(child)
         self.childs[ind]=child2
+        child2.parent=self
 
     def _getChildsValue(self):
         childsV = []
@@ -94,7 +95,6 @@ class BNFTree:
         self.nodes[node.data]=node
         for child in node.childs:
             self._updateNode(child)
-
 
     def _walk_tree(self,node,result):
 

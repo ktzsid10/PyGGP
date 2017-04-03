@@ -44,35 +44,10 @@ class PYGGP:
 		self.data._printPopulation()
 		
 		#Calculate fitness for each individual, if fitness already calculated use older value
-		self.data._calculatePopFitness(self.fitness_function)
-		self.data._applySelection(self.selection_function,self.selection_function_args)	
-		print "Before Crossover"
-		self.data._printPopulation()
-		self.data._applyCrossover()
-		print "After Crossover"
-		self.data._printPopulation()
-
-def fitness(individual):
-	expr = individual.split()
-	if(expr[1]=='+'):
-		return int(expr[0])+int(expr[2])
-	elif (expr[1]=='*'):
-		return int(expr[0])*int(expr[2])
-	elif (expr[1]=='/'):
-		return int(expr[0])/int(expr[2])
-	elif (expr[1]=='-'):
-		return int(expr[0])-int(expr[2])
-	
-
-def main():
-
-	pyGGP = PYGGP(fitness,population=10,grammar='grammarSum.txt')
-	#pyGGP._showRules()
-	#pyGGP._calculateProba()
-	pyGGP._run()
-
-if __name__ == "__main__":
-
-	main()
-
-
+		for i in range(0,self.data.config.generations):
+			print "Generation "+str(i+1) 
+			self.data._calculatePopFitness(self.fitness_function)
+			self.data._applySelection(self.selection_function,self.selection_function_args)	
+			#self.data._printPopulation()
+			self.data._applyCrossover()
+			self.data._applyMutation()

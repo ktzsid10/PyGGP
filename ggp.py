@@ -51,11 +51,11 @@ class GGP:
 			if node_apply == self.start:
 				ind1.nodes[node_apply],ind2.nodes[node_apply] = ind2.nodes[node_apply],ind1.nodes[node_apply]
 			else:
-				parent1 = ind1.nodes[node_apply].parent
-				parent2 = ind2.nodes[node_apply].parent
 
 				child1 = ind1.nodes[node_apply]
 				child2 = ind2.nodes[node_apply]
+				parent1 = child1.parent
+				parent2 = child2.parent
 
 				parent1._replaceChild(child1,child2)
 				parent2._replaceChild(child2,child1)
@@ -63,7 +63,6 @@ class GGP:
 				#ind1.nodes[node_apply],ind2.nodes[node_apply] = ind2.nodes[node_apply],ind1.nodes[node_apply]
 				ind1._updateNodes()
 				ind2._updateNodes()
-
 
 	def _printFitness(self):
 
@@ -86,6 +85,10 @@ class GGP:
 	def _applyCrossover(self):
 		for i in xrange(0,len(self.population),2):
 			self._crossover(self.population[i],self.population[i+1])
+
+	def __applyMutation(self):
+		for i in xrange(0,len(self.population)):
+			self._mutation(self.population[i])
 
 	def _getFitnessIndex(self,index):
 		return self.fitness[self.population[index]._getExpression()]
