@@ -77,6 +77,9 @@ class BNFTree:
             return self.nodes[node]
         else:
             return None
+
+    def _getRoot(self):
+        return self.nodes[self.root]
     
     def _printNodes(self):
 
@@ -156,39 +159,4 @@ def create_Tree(rules,start):
             tree._insertNode(parent,child)
             to_add.append(child)
     
-    return tree
-
-def mutateTree(rules,node,tree):
-
-    tree.nodes[node.data].childs = []
-
-    to_add = deque()
-    to_add.append(node.data)
-
-    while to_add:
-
-        parent = to_add.popleft()
-        if(parent in rules):
-            childs = rules[parent]
-        else:
-            continue
-
-        if(len(childs)>1):
-            index = roulette(childs)
-            childs = childs[index]
-        else:
-            childs=childs[0]
-
-        for child in childs:
-
-            if(child.startswith('[')):
-                index = randint(0,100)
-                if(index<50):
-                    continue
-                child = child.replace('[','').replace(']','')
-
-            tree._insertNode(parent,child)
-            to_add.append(child)
-
-    tree._updateNodes()
     return tree

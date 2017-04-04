@@ -31,6 +31,13 @@ class GGP:
 			print "Ind "+str(count)+": "+ind._getExpression()
 			count+=1
 
+	def _printPopulationNodes(self):
+		count = 0
+		for ind in self.population:
+			print "Ind "+str(count)+": "+ind._getExpression()
+			print ind.nodes
+			count+=1
+
 	def _generatePopulation(self):
 
 		if(len(self.population)>0):
@@ -49,7 +56,7 @@ class GGP:
 			node_apply = intersection[randint(0,len(intersection)-1)]		
 
 			if node_apply == self.start:
-				ind1.nodes[node_apply],ind2.nodes[node_apply] = ind2.nodes[node_apply],ind1.nodes[node_apply]
+				ind1,ind2 = ind2,ind1
 			else:
 
 				child1 = ind1.nodes[node_apply]
@@ -60,7 +67,6 @@ class GGP:
 				parent1._replaceChild(child1,child2)
 				parent2._replaceChild(child2,child1)
 
-				#ind1.nodes[node_apply],ind2.nodes[node_apply] = ind2.nodes[node_apply],ind1.nodes[node_apply]
 				ind1._updateNodes()
 				ind2._updateNodes()
 
@@ -86,7 +92,7 @@ class GGP:
 		for i in xrange(0,len(self.population),2):
 			self._crossover(self.population[i],self.population[i+1])
 
-	def __applyMutation(self):
+	def _applyMutation(self):
 		for i in xrange(0,len(self.population)):
 			self._mutation(self.population[i])
 
@@ -101,6 +107,19 @@ class GGP:
 		apply_mutation = randint(0,100)
 		if(apply_mutation<self.config.mutation_rate):
 			nodes = list(ind.nodes.viewkeys())
+			nodes = [node for node in nodes if node.startswith('<')]
 			node_apply = nodes[randint(0,len(nodes)-1)]
 			
-			mutateTree(self.rules,ind.nodes[node_apply],ind)
+			subtree = create_Tree(self.rules,node_apply)
+
+			if node_apply == self.start:
+				ind = subtree
+			else:
+				subtree_root = subtree._getRoot()
+
+				child = ind.nodes[node_apply]
+				parent = child.parent
+
+				parent._replaceChild(child,subtree_root) 
+
+				ind._updateNodes()

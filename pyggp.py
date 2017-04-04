@@ -19,7 +19,7 @@ from grammar import *
 from bnf_tree import *
 from ggpconfig import *
 from ggp import *
-from selection import *		
+from selection import *
 
 class PYGGP:
 
@@ -48,6 +48,5 @@ class PYGGP:
 			print "Generation "+str(i+1) 
 			self.data._calculatePopFitness(self.fitness_function)
 			self.data._applySelection(self.selection_function,self.selection_function_args)	
-			#self.data._printPopulation()
 			self.data._applyCrossover()
 			self.data._applyMutation()
