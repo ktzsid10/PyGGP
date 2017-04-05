@@ -15,6 +15,7 @@ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more de
 
 """
 from bnf_tree import *
+from collections import OrderedDict
 
 class GGP:
 
@@ -84,6 +85,10 @@ class GGP:
 
 	def _getFitness(self,ind):
 		return self.fitness[ind._getExpression()]
+
+	def _getBestFitness(self):
+		best = OrderedDict(sorted(self.fitness.items(), key=lambda t: t[1],reverse=True))
+		return best
 
 	def _applySelection(self,selection_function,sf_args):
 		self.population = selection_function(self,sf_args)

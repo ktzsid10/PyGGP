@@ -20,6 +20,7 @@ from bnf_tree import *
 from ggpconfig import *
 from ggp import *
 from selection import *
+from progress import *
 
 class PYGGP:
 
@@ -41,12 +42,23 @@ class PYGGP:
 
 	def _run(self):
 		self.data._generatePopulation()
+		print "Initial Population"
 		self.data._printPopulation()
+		print "\n"
 		
 		#Calculate fitness for each individual, if fitness already calculated use older value
 		for i in range(0,self.data.config.generations):
-			print "Generation "+str(i+1) 
+			printProgress (i+1,self.data.config.generations, prefix = 'Processing '+str(i+1)+' of '+str(self.data.config.generations))
 			self.data._calculatePopFitness(self.fitness_function)
 			self.data._applySelection(self.selection_function,self.selection_function_args)	
 			self.data._applyCrossover()
 			self.data._applyMutation()
+
+		print "\nBest 5 Individuals:"
+		count = 0
+
+		for key,value in self.data._getBestFitness().items():
+			print key+" Fitness: "+str(value)
+			if count>4:
+				break
+			count+=1
