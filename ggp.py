@@ -25,6 +25,7 @@ class GGP:
 		self.config=config
 		self.population=[]
 		self.fitness={}
+		self.elite = []
 
 	def _printPopulation(self):
 		count = 0
@@ -42,7 +43,7 @@ class GGP:
 	def _generatePopulation(self):
 
 		if(len(self.population)>0):
-			self.population.clear()
+			self.population[:]=[]
 
 		for i in range(0,self.config.population_size):
 			tree=create_Tree(self.rules,self.start)
@@ -81,6 +82,7 @@ class GGP:
 		for ind in self.population:
 			if(ind._getExpression() not in self.fitness):
 				fit = fitness_function(ind._getExpression())
+				ind.fitness = fit
 				self.fitness[ind._getExpression()]=fit		
 
 	def _getFitness(self,ind):
@@ -92,6 +94,17 @@ class GGP:
 
 	def _applySelection(self,selection_function,sf_args):
 		self.population = selection_function(self,sf_args)
+
+	def _separateKbest(self,k):
+		best = sorted(self.population, key=lambda t: t.fitness,reverse=True)[:2]
+		for b in best:
+			self.population.remove(b)
+			self.elite.append(b)
+
+	def _concatKbest(self):
+		for ind in self.elite:
+			self.population.append(ind)
+		self.elite[:]=[]
 
 	def _applyCrossover(self):
 		for i in xrange(0,len(self.population),2):

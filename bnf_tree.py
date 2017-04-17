@@ -50,6 +50,7 @@ class BNFTree:
         self.nodes={}
         self.nodes[root]=Node(root)
         self.root = root
+        self.fitness = 0
 
     def _insertNode(self,parent,data):
 
