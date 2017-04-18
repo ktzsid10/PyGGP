@@ -40,12 +40,12 @@ class GGP:
 			print ind.nodes
 			count+=1
 
-	def _generatePopulation(self):
+	def _generatePopulation(self,size = 100):
 
 		if(len(self.population)>0):
 			self.population[:]=[]
 
-		for i in range(0,self.config.population_size):
+		for i in range(0,size):
 			tree=create_Tree(self.rules,self.start)
 			self.population.append(tree)
 

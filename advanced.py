@@ -15,14 +15,8 @@ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more de
 
 """
 
-class GGPconfig:
+def flood(data,keep):
 
-	def __init__(self,pop=100,gen=100,mr=90,cr=90,es=2,fl=False):
-		self.population_size = pop
-		self.generations = gen
-		self.mutation_rate = mr
-		self.crossover_rate = cr
-		if(es%2!=0):
-			es+=1
-		self.elitism_size = es
-		self.flood = fl
+	data._separateKbest(keep)
+	data._generatePopulation(data.config.population_size-keep)
+	data._concatKbest()
